@@ -1,4 +1,6 @@
-def create_spiral_matrix(n):
+def create_spiral_matrix(n, start=1, end=None, reverse=False):
+    if end is None:
+        end = n * n + start
     # Matritsani nol bilan to'ldirish
     matrix = [[0 for _ in range(n)] for _ in range(n)]
     
@@ -7,8 +9,15 @@ def create_spiral_matrix(n):
     current_dir = 0  # Dastlab o'ngga harakatlanadi
     
     row, col = 0, 0  # Boshlang'ich nuqta
-    for num in range(1, n*n + 1):
-        matrix[row][col] = num
+    if reverse:
+        step = -1
+        current_num = end - 1
+    else:
+        step = 1
+        current_num = start
+
+    for _ in range(n * n):
+        matrix[row][col] = current_num
         # Keyingi qadamni hisoblash
         next_row = row + directions[current_dir][0]
         next_col = col + directions[current_dir][1]
@@ -22,18 +31,27 @@ def create_spiral_matrix(n):
             next_col = col + directions[current_dir][1]
         
         row, col = next_row, next_col
-    
+        current_num += step
+
     return matrix
 
-def print_matrix(matrix):
-    n = len(matrix)
-    # Matritsani chiroyli formatda chiqarish
-    for row in matrix:
-        print(' '.join(f"{num:2d}" for num in row))
+def print_side_by_side(matrix1, matrix2):
+    n = len(matrix1)
+    for i in range(n):
+        # Formatlash: har bir son uchun 2 raqamli joy ajratish
+        row1 = ' '.join(f"{num:2d}" for num in matrix1[i])
+        row2 = ' '.join(f"{num:2d}" for num in matrix2[i])
+        print(f"{row1}    {row2}")  # Oraliq uchun 4 bo'sh joy
 
-# 7x7 matritsa yaratish
-n = 7
-spiral_matrix = create_spiral_matrix(n)
+def main():
+    n = 7  # Matritsa o'lchami
+    # Birinchi matritsa: 1 dan 49 gacha spiral
+    spiral_matrix1 = create_spiral_matrix(n, start=1, end=50, reverse=False)
+    # Ikkinchi matritsa: 49 dan 1 gacha spiral
+    spiral_matrix2 = create_spiral_matrix(n, start=1, end=50, reverse=True)
+    
+    print("Birinchi Matritsa (1 dan 49 gacha):\tIkkinchi Matritsa (49 dan 1 gacha):")
+    print_side_by_side(spiral_matrix1, spiral_matrix2)
 
-# Matritsani chop etish
-print_matrix(spiral_matrix)
+if name == "main":
+    main()
